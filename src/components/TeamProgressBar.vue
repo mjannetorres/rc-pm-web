@@ -2,7 +2,7 @@
   <v-card class="mx-auto" max-width="450">
     <v-card-title class="primary--text"> Status </v-card-title>
 
-    <v-card-subtitle> {{ status }}% to completion </v-card-subtitle>
+    <v-card-subtitle> {{ progress }}% to completion </v-card-subtitle>
 
     <v-row justify="center">
       <v-col cols="7" md="12" xl="7">
@@ -14,48 +14,36 @@
             :value="30"
             color="secondary"
           >
-            {{ status }} <br />
-            tasks left
+            {{ status.filter(stat => stat.status == 'Z')[0]['statuscount'] }} <br />
+            orders closed
           </v-progress-circular>
         </div>
       </v-col>
-      <v-col cols="5" md="12" lg="10" xl="5" class="align-self-center mx-auto">               
+      <v-col cols="5" md="12" lg="10" xl="5" class="align-self-center mx-auto">
         <v-row no-gutters class="mx-2">
-          <v-col cols="6" md="2" xl="4">
-            <v-chip dark small label color="blue">23</v-chip>
-          </v-col>
-          <v-col cols="6" md="4" xl="8">
-            <span class="font-weight-light text-caption">Completed</span>
-          </v-col>
-          
-          <v-col cols="6" md="2" xl="4">
-          <v-chip dark small label color="green">23</v-chip>
-          </v-col>
-          <v-col cols="6" md="4" xl="8">
-          <span class="font-weight-light text-caption">In progress</span>
-          </v-col>
-          <v-col cols="6" md="2" xl="4">
-          <v-chip dark small label color="brown">23</v-chip>
-          </v-col>
-          <v-col cols="6" md="4" xl="8">
-          <span class="font-weight-light text-caption">Not started</span>
-          </v-col>
-
-          <v-col cols="6" md="2" xl="4">
-          <v-chip dark small label color="red">23</v-chip>
-          </v-col>
-          <v-col cols="6" md="4" xl="8">
-          <span class="font-weight-light text-caption">Late</span>
-          </v-col>
-
-          <v-col cols="6" md="2" xl="4">
-          <v-chip dark small label color="warning">23</v-chip>
-          </v-col>
-          <v-col cols="6" md="4" xl="8">
-          <span class="font-weight-light text-caption">At Risk</span>
-          </v-col>
+          <v-col
+            v-for="stat in status"
+            :key="stat.label"
+            cols="12" 
+            md="6"                      
+            xl="12"
+            wrap
+            justify-md="center"
+          >
+            <v-row  no-gutters class="mx-auto">
+              <v-col cols="6" md="4">
+                <v-chip small label :color="getColor(stat.status)">{{
+                  stat.statuscount
+                }}</v-chip>
+              </v-col>
+              <v-col cols="6" md="6" xl="8">
+                <span class="font-weight-light text-caption">{{
+                  getLabel(stat.status)
+                }}</span>
+              </v-col>
+            </v-row>
+          </v-col>         
         </v-row>
-       
       </v-col>
     </v-row>
 
@@ -102,11 +90,14 @@
 </template>
 
 <script>
+import {getLabel, getColor} from '../functions/global';
+
 export default {
+  props: ['status', 'label', 'color'],
   data() {
     return {
       show: true,
-      status: 78,
+      progress: 78,
       team: [
         { name: "Mary Janne Torres", progress: 80 },
         { name: "Gemma Capada", progress: 70 },
@@ -115,6 +106,13 @@ export default {
       ],
     };
   },
+  methods: {
+   getLabel, getColor 
+  },
+  created(){
+    
+    
+  }
 };
 </script>
 
