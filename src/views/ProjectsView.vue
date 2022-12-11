@@ -140,11 +140,6 @@ export default {
         
         let timeout = 1000;
 
-        // let currency = new Intl.NumberFormat("en-US", {
-        //   style: "currency",
-        //   currency: "PHP",
-        // });
-
         setTimeout(() => {
           this.orders = response.data["joborders"].map((data) => {
             return {

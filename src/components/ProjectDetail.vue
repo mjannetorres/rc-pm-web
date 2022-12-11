@@ -2,8 +2,7 @@
   <v-card flat>
     <v-card-title class="primary--text"
       >Job Order No. {{ items[0].jono }} / {{ items[0].client }}
-    </v-card-title>
-
+    </v-card-title>    
     <v-data-table
       :headers="headers"
       :items="items"
