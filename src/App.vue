@@ -1,7 +1,7 @@
 <template>
   <v-app :class="appStyle">
    
-    <NavBar v-if="this.$route.name != 'login'"/>   
+    <NavBar v-if="(this.$route.name != 'login') && (this.$route.name != 'register')"/>   
 
     <!-- Sizes your content based upon application components -->
     <v-main :class="mainStyle">
@@ -29,10 +29,19 @@ export default {
   }),
   computed: {
     mainStyle(){      
-      return this.$route.name == 'login' ? 'login' : ''
+      if ((this.$route.name == 'login') || (this.$route.name == 'register')){
+        return 'login'
+      }else{
+        return ''
+      }
+      // return this.$route.name == 'login' ? 'login' : ''
     },
     appStyle(){
-      return this.$route.name == 'login' ? 'login-bg' : ''
+      if ((this.$route.name == 'login') || (this.$route.name == 'register')){
+        return 'login-bg'
+      }else{
+        return ''
+      }    
     }
   }
 };

@@ -76,11 +76,17 @@
               </v-col>
             </v-row>
           </v-card-title>
-          <ProjectList :orders="orders" :page_length="page_length" :page="page" :loading="loading" @search="handleSearch"/>
+          <ProjectList
+            :orders="orders"
+            :page_length="page_length"
+            :page="page"
+            :loading="loading"
+            @search="handleSearch"
+          />
         </v-card>
       </v-col>
       <v-col cols="12" md="4">
-        <TeamProgressBar :status="status" :label="getLabel" :color="getColor"/>
+        <TeamProgressBar :status="status" :label="getLabel" :color="getColor" />
       </v-col>
     </v-row>
   </div>
@@ -92,7 +98,7 @@ import ProjectList from "@/components/ProjectList.vue";
 import axios from "axios";
 import { format, subMonths } from "date-fns";
 import server from "@/config/server";
-import {currency} from '@/functions/global'
+import { currency } from "@/functions/global";
 
 export default {
   components: { TeamProgressBar, ProjectList },
@@ -101,7 +107,7 @@ export default {
       loading: false,
       search: "",
       page_length: 4,
-      page: 1,   
+      page: 1,
       date_menu1: false,
       date_menu2: false,
       date1: new Date(
@@ -118,7 +124,7 @@ export default {
     };
   },
   methods: {
-    async handleSearch(page) {     
+    async handleSearch(page) {
       try {
         let datefrom = format(new Date(this.date1), "yyyy-MM-dd");
         let dateto = format(new Date(this.date2), "yyyy-MM-dd");
@@ -132,39 +138,50 @@ export default {
           limit: 10,
         };
 
-        const response = await axios.get(`${server}joborder/search/`, {
-          params,
-        });
+        var config = {
+          method: "get",
+          url: `${server}joborder/search/`,
+          headers: {
+            'Accept': 'application/json'
+          },
+          data: params,
+        };
 
-        this.status = response.data["status"];
-        
-        let timeout = 1000;
+        await axios(config)
+          .then(function (response) {
+            this.status = response.data["status"];
 
-        setTimeout(() => {
-          this.orders = response.data["joborders"].map((data) => {
-            return {
-              ...data,              
-              due: format(new Date(data.duedate), "LLL dd, yyyy"),
-              created: format(new Date(data.created), "LLL dd, yyyy"),
-              amount: currency(data.amount),
-              paid: currency(data.paid),
-              balance: currency(data.balance),
-            };
+            let timeout = 1000;
+
+            setTimeout(() => {
+              this.orders = response.data["joborders"].map((data) => {
+                return {
+                  ...data,
+                  due: format(new Date(data.duedate), "LLL dd, yyyy"),
+                  created: format(new Date(data.created), "LLL dd, yyyy"),
+                  amount: currency(data.amount),
+                  paid: currency(data.paid),
+                  balance: currency(data.balance),
+                };
+              });
+
+              this.page_length = 10;
+              if (Math.ceil(response.data["length"] / 10) < 10) {
+                this.page_length = Math.ceil(response.data["length"] / 10);
+              }
+
+              this.loading = false;
+            }, timeout);
+          })
+          .catch(function (error) {
+            this.loading = false;
+            console.log(error);
           });
-
-          this.page_length = 10;
-          if (Math.ceil(response.data["length"] / 10) < 10) {
-            this.page_length = Math.ceil(response.data["length"] / 10);
-          }
-
-          this.loading = false;
-        }, timeout);         
-
       } catch (err) {
         console.log(err);
         this.loading = false;
       }
-    },    
+    },
   },
   created() {
     this.handleSearch();

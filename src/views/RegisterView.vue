@@ -9,36 +9,38 @@
     </v-row>
 
     <v-row no-gutters class="my-10">
-      <LoginForm :message="message" @login="handleLogin" />
+      <RegisterForm :message="message" @register="handleRegister" />
     </v-row>
   </div>
 </template>
 
 <script>
-import LoginForm from "@/components/Auth/LoginForm.vue";
+import RegisterForm from "@/components/Auth/RegisterForm.vue";
 import { useUserStore } from "@/store/UserStore";
 
 export default {
-  components: { LoginForm },
+  components: { RegisterForm },
   data() {
     return {
-      message: null,
+      message: [],
     }
   },
   methods: {
-    async handleLogin(params) {
+    async handleRegister(params) {
       try {
         const userStore = useUserStore();
 
-        await userStore.login(params);        
+        await userStore.register(params);
+
+        console.log(userStore.token);
 
         this.message = userStore.errMsg
-
+        
         if (userStore.token) {
           this.$router.push({ path: "/" });
         }
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
     },
   },
