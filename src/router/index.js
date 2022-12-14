@@ -10,33 +10,48 @@ import RegisterView from "../views/RegisterView.vue";
 
 Vue.use(VueRouter)
 
+const requiredAuth =  (to, from, next) => {
+  let user =  localStorage.getItem('auth')
+  console.log(user)
+  if(!user){
+    next({ name : 'login'})
+  } else {
+    next()
+  }
+}
+
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: HomeView,
+    beforeEnter: requiredAuth
   },
   {
     path: '/projects',
     name: 'projects',
-    component: ProjectsView
+    component: ProjectsView,   
+    beforeEnter: requiredAuth
   },
   {
     path: '/reports',
     name: 'reports',
-    component: ReportsView
+    component: ReportsView,    
+    beforeEnter: requiredAuth
   },
   {
     path: '/project/:id',
     name: 'projectdetail',
-    component: ProjectDetailView,
-    props: true
+    component: ProjectDetailView,        
+    props: true,
+    beforeEnter: requiredAuth
   },
   {
     path: '/layout/:id',
     name: 'layout',
-    component: LayoutView,
-    props: true
+    component: LayoutView,   
+    props: true,
+    beforeEnter: requiredAuth
   },
   {
     path: '/login',
@@ -57,3 +72,4 @@ const router = new VueRouter({
 })
 
 export default router
+

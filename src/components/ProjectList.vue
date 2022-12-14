@@ -19,12 +19,12 @@
       <v-divider></v-divider>
       <div v-if="orders.length == 0 && !loading" class="text-center mt-10">
         <p>No Data Available</p>
-      </div>
+      </div>      
       <v-list-item
         v-for="item in orders"
         :key="item.jono"
         router
-        :to="{ name: 'projectdetail', params: { id: item.id } }"
+        :to="{ name: 'projectdetail', params: { id: item.jono } }"
         active-class="primary--text"
         v-show="!loading"
       >

@@ -1,8 +1,8 @@
 <template>
   <div class="my-5 mx-5">
     <v-row justify="center" justify-md="start" wrap>
-      <v-col cols="12" md="7">
-        <ProjectDetail :items="items" />
+      <v-col cols="12" md="7">             
+        <ProjectDetail :id="id" :items="items" />
       </v-col>
       <v-col cols="12" md="5">
         <WorkHistoryList
@@ -30,7 +30,7 @@ import { format } from "date-fns";
 
 export default {
   props: ["id"],
-  components: { ProjectDetail, WorkHistoryList },
+  components: {ProjectDetail,  WorkHistoryList },
   data() {
     return {
       items: [],
@@ -72,20 +72,63 @@ export default {
     };
   },
   methods: {
-    async loadOutput() {
-      const response = await axios.get(`${server}orderdetails/${this.id}`);
+    async loadOutput() {    
+         
+      var config = {        
+          method: "get",
+          url: `${server}orderdetails/${this.id}`,
+          headers: {
+            Accept: "application/json",
+            Authorization: 'Bearer '+localStorage.getItem('auth'),
+          },
+          data: {},
+        };
+
+      const response = await axios(config);
       this.output = response.data;
     },
-    async loadRoles() {
-      const response = await axios.get(`${server}roles`);
+    async loadRoles() {      
+
+      var config = {
+          method: "get",
+          url: `${server}roles`,
+          headers: {
+            Accept: "application/json",
+            Authorization: 'Bearer '+localStorage.getItem('auth'),
+          },
+          data: {},
+        };
+
+      const response = await axios(config);
       this.roles = response.data;
     },
     async loadWorkers() {
-      const response = await axios.get(`${server}workers`);
+
+      var config = {
+          method: "get",
+          url: `${server}workers`,
+          headers: {
+            Accept: "application/json",
+            Authorization: 'Bearer '+localStorage.getItem('auth'),
+          },
+          data: {},
+        };
+
+      const response = await axios(config);   
       this.workers = response.data;
     },
-    async loadLogs() {
-      const response = await axios.get(`${server}worklog/${this.id}`);
+    async loadLogs() {       
+      var config = {
+          method: "get",
+          url: `${server}worklog/${this.id}`,
+          headers: {
+            Accept: "application/json",
+            Authorization: 'Bearer '+localStorage.getItem('auth'),
+          },
+          data: {},
+        };
+
+      const response = await axios(config);   
 
       this.logs = response.data.map((data) => {
         return {
@@ -94,30 +137,65 @@ export default {
         };
       });
     },
-    async deleteLog(params, id) {     
+    async deleteLog(params, id) {    
 
-      const response = await axios.delete(`${server}worklog/${id}`, {params});
-    
+      var config = {
+          method: "delete",
+          url: `${server}worklog/${id}, ${{params}}`,
+          headers: {
+            Accept: "application/json",
+            Authorization: 'Bearer '+localStorage.getItem('auth'),
+          },
+          data: {},
+        };
+
+      const response = await axios(config);
+
       if (response.data > 0) {
         this.loadLogs();
       }
     },
     async saveLog(params, id) {      
 
-      let response;
+      let method, url;
       if (id > 0) {
-        response = await axios.put(`${server}worklog/${id}`, params);
+        method = 'put'
+        url = `${server}worklog/${id}`
       } else {
-        response = await axios.post(`${server}worklog`, params);
+        method = 'post'
+        url = `${server}worklog`
       }
-     
+
+      var config = {
+          method: method,
+          url:url,
+          headers: {
+            Accept: "application/json",
+            Authorization: 'Bearer '+localStorage.getItem('auth'),
+          },
+          data: params,
+        };
+   
+      let response = await axios(config)      
+
       if (response.data > 0) {
         this.loadLogs();
       }
     },
-    async load() {
-      try {
-        let response = await axios.get(`${server}joborder/${this.id}`);
+    async loadItems() {
+      try {      
+
+        var config = {
+          method: "get",
+          url: `${server}joborder/${this.id}`,
+          headers: {
+            Accept: "application/json",
+            Authorization: 'Bearer '+localStorage.getItem('auth'),
+          },
+          data: {},
+        };
+
+        const response = await axios(config);          
 
         this.items = response.data.map((data) => {
           return {
@@ -125,7 +203,7 @@ export default {
             cost: currency(data.cost),
             total: currency(data.total),
           };
-        });
+        });      
 
         this.loadLogs();
         this.loadRoles();
@@ -138,9 +216,9 @@ export default {
     },
   },
   mounted() {},
-  async created() {
-    this.load();
-  },
+  created(){    
+    this.loadItems()
+  }
 };
 </script>
 

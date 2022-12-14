@@ -37,7 +37,7 @@ export default {
         this.message = userStore.errMsg
         
         if (userStore.token) {
-          this.$router.push({ path: "/" });
+          this.$router.push({ path: "/projects" });
         }
       } catch (error) {
         console.log(error)

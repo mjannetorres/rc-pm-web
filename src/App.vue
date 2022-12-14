@@ -1,6 +1,5 @@
 <template>
-  <v-app :class="appStyle">
-   
+  <v-app :class="appStyle">    
     <NavBar v-if="(this.$route.name != 'login') && (this.$route.name != 'register')"/>   
 
     <!-- Sizes your content based upon application components -->
@@ -8,6 +7,7 @@
       <!-- Provides the application the proper gutter -->
       <v-container fluid>
         <!-- If using vue-router -->
+        
         <router-view></router-view>
       </v-container>
     </v-main>

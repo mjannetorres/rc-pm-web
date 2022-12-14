@@ -76,14 +76,10 @@ export default {
   methods: {
     editItem(item) {
       this.editedIndex = this.items.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      // this.dialog = true
-      //console.log(item.desc, item.id);
-      //alert(item.desc);
+      this.editedItem = Object.assign({}, item);      
     },
     showLog(item) {
-      console.log(item);
-      // this.dialog = true;
+      console.log(item);      
     },
     closeDlg() {
       this.dialog = false;
@@ -94,48 +90,7 @@ export default {
     
   },
   created() {
-    
-    // this.headers.push({
-    //   text: "Rem. Qty",
-    //   value: "rem",
-    //   groupable: false,
-    //   sortable: false,
-    //   align: "end",
-    // });
-    // if (this.isCutter) {
-    //   this.headers.push(
-    //     {
-    //       text: "1st Cut",
-    //       value: "cut1",
-    //       groupable: false,
-    //       sortable: false,
-    //       align: "end",
-    //     },
-    //     {
-    //       text: "2nd Cut",
-    //       value: "cut2",
-    //       groupable: false,
-    //       sortable: false,
-    //       align: "end",
-    //     }
-    //   );
-    // }
-    // this.headers.push(
-    //   {
-    //     text: "Completed",
-    //     value: "done",
-    //     groupable: false,
-    //     sortable: false,
-    //     align: "center",
-    //   },
-    //   {
-    //     text: "Log Task",
-    //     value: "actions",
-    //     sortable: false,
-    //     groupable: false,
-    //     align: "center",
-    //   }
-    // );
+  
   },
 };
 </script>

@@ -4,7 +4,7 @@
       <v-col cols="12" md="8">
         <v-card flat>
           <v-card-title class="primary--text">
-            <v-row align-content="center">
+            <v-row align-content="center">              
               <v-col cols="12" xl="4">Job Orders</v-col>
 
               <!-- date from -->
@@ -125,58 +125,47 @@ export default {
   },
   methods: {
     async handleSearch(page) {
-      try {
+      try {        
         let datefrom = format(new Date(this.date1), "yyyy-MM-dd");
         let dateto = format(new Date(this.date2), "yyyy-MM-dd");
         this.loading = true;
 
-        let params = {
-          name: this.search.toUpperCase(),
-          from: datefrom,
-          to: dateto,
-          offset: (page - 1) * 10,
-          limit: 10,
-        };
+        const offset = (page - 1) * 10;      
 
         var config = {
           method: "get",
-          url: `${server}joborder/search/`,
+          url: `${server}joborder/search/?name=${this.search}&from=${datefrom}&to=${dateto}&offset=${offset}&limit=10`,
           headers: {
-            'Accept': 'application/json'
+            Accept: "application/json",
+            Authorization: 'Bearer '+localStorage.getItem('auth'),
           },
-          data: params,
+          data: {},
         };
 
-        await axios(config)
-          .then(function (response) {
-            this.status = response.data["status"];
+        const response = await axios(config);      
+        this.status = response.data["status"];
 
-            let timeout = 1000;
+        let timeout = 1000;
 
-            setTimeout(() => {
-              this.orders = response.data["joborders"].map((data) => {
-                return {
-                  ...data,
-                  due: format(new Date(data.duedate), "LLL dd, yyyy"),
-                  created: format(new Date(data.created), "LLL dd, yyyy"),
-                  amount: currency(data.amount),
-                  paid: currency(data.paid),
-                  balance: currency(data.balance),
-                };
-              });
-
-              this.page_length = 10;
-              if (Math.ceil(response.data["length"] / 10) < 10) {
-                this.page_length = Math.ceil(response.data["length"] / 10);
-              }
-
-              this.loading = false;
-            }, timeout);
-          })
-          .catch(function (error) {
-            this.loading = false;
-            console.log(error);
+        setTimeout(() => {
+          this.orders = response.data["joborders"].map((data) => {
+            return {
+              ...data,
+              due: format(new Date(data.duedate), "LLL dd, yyyy"),
+              created: format(new Date(data.created), "LLL dd, yyyy"),
+              amount: currency(data.amount),
+              paid: currency(data.paid),
+              balance: currency(data.balance),
+            };
           });
+
+          this.page_length = 10;
+          if (Math.ceil(response.data["length"] / 10) < 10) {
+            this.page_length = Math.ceil(response.data["length"] / 10);
+          }
+
+          this.loading = false;
+        }, timeout);
       } catch (err) {
         console.log(err);
         this.loading = false;

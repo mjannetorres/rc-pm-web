@@ -16,7 +16,7 @@ import { faUserSecret, faBookmark, faHouse, faListCheck, faChartSimple, faTableC
 /* add icons to the library */
 library.add(faUserSecret, faBookmark, faHouse, faListCheck, faChartSimple, faTableCellsLarge, faPowerOff)
 
-/* add font awesome icon component */
+// /* add font awesome icon component */
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false
@@ -24,9 +24,9 @@ Vue.config.productionTip = false
 Vue.use(PiniaVuePlugin)
 const pinia = createPinia()
 
-new Vue({
-  router,
-  vuetify,  
+ new Vue({      
   pinia,
+  router,
+  vuetify,            
   render: h => h(App)
 }).$mount('#app')

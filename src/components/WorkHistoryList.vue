@@ -202,8 +202,7 @@ export default {
       this.dialogDelete = true;
     },
 
-    deleteItemConfirm() {
-      console.log(this.editedIndex);
+    deleteItemConfirm() {      
       const params = {
         cancelledbyid: 1
       }  
